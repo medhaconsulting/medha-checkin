@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Medha Consulting – Check-In/Out</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Medha Consulting (Cambodia) Co., Ltd.</h1>
+  <p class="sub">Employee Check-In / Check-Out</p>
+  <p class="loc" id="locName"></p>
+</header>
+<main>
+  <section class="card">
+    <label>Your name <input id="name" placeholder="e.g. Sokha Chan" autocomplete="name"></label>
+    <label>Employee ID (optional) <input id="empId" placeholder="e.g. MC-001"></label>
+  </section>
+  <section class="buttons">
+    <button id="btnIn" class="btn in">Check In</button>
+    <button id="btnOut" class="btn out">Check Out</button>
+  </section>
+  <div id="status" class="status">Ready.</div>
+  <section class="card">
+    <div class="row"><h2>Today's history</h2><button id="btnCsv" class="small">Download CSV</button></div>
+    <ul id="history"></ul>
+  </section>
+  <p class="note">⚠️ Test version: records are stored on this device only (in this browser). Clearing browser data deletes them.</p>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
