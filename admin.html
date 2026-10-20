@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Medha Consulting – Check-In Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Medha Consulting (Cambodia) Co., Ltd.</h1>
+  <p class="sub">Check-In Admin</p>
+</header>
+<main class="wide">
+  <section id="loginBox" class="card" hidden>
+    <label>Admin email <input id="email" type="email" placeholder="you@example.com" autocomplete="email"></label>
+    <button id="btnLogin" class="small">Send me a sign-in link</button>
+  </section>
+  <section id="dataBox" hidden>
+    <div class="card">
+      <div class="row"><span id="who"></span><button id="btnOut" class="small">Sign out</button></div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <label style="margin:0">Date (Phnom Penh) <input id="date" type="date"></label>
+        <div><button id="btnAll" class="small">Show all</button> <button id="btnCsv" class="small">Download CSV</button></div>
+      </div>
+      <p id="count"></p>
+      <div class="tbl"><table><thead><tr><th>Date</th><th>Time</th><th>Name</th><th>ID</th><th>Type</th><th>Distance (m)</th><th>Accuracy (m)</th><th>Map</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+  </section>
+  <div id="status" class="status">Loading…</div>
+  <footer><a href="./">Back to check-in</a></footer>
+</main>
+<script src="config.js"></script>
+<script type="module" src="admin.js"></script>
+</body>
+</html>

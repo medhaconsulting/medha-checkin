@@ -8,3 +8,6 @@ label{display:block;font-size:.85rem;font-weight:600;margin-bottom:10px}input{di
 .row{display:flex;justify-content:space-between;align-items:center}h2{font-size:1rem;margin:0}.small{background:#123c69;color:#fff;border:0;border-radius:8px;padding:8px 12px;cursor:pointer}
 ul{list-style:none;padding:0;margin:12px 0 0}li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem}li b.IN{color:#1f9d55}li b.OUT{color:#d64545}
 .note{font-size:.8rem;color:#6b7385;text-align:center}
+
+footer{text-align:center;margin-top:24px}footer a{color:#9aa3b5;font-size:.75rem;text-decoration:none}
+table{width:100%;border-collapse:collapse;font-size:.85rem}th,td{text-align:left;padding:6px;border-bottom:1px solid #eee}.wide{max-width:1000px}.tbl{overflow-x:auto}

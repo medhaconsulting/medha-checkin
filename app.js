@@ -48,7 +48,7 @@ if (typeof document !== "undefined") {
     list.forEach(r => {
       const li = document.createElement("li");
       li.innerHTML = `<b class="${r.type}">${r.type}</b> ${r.time} — `;
-      li.append(`${r.name}${r.empId ? " (" + r.empId + ")" : ""} · ${r.distance} m`);
+      li.append(`${r.name}${r.empId ? " (" + r.empId + ")" : ""} · ${r.distance} m${r.synced === false ? " · ⚠️ not sent" : ""}`);
       $("history").appendChild(li);
     });
   }
@@ -72,9 +72,15 @@ if (typeof document !== "undefined") {
       const recs = load();
       recs.push({ name, empId: $("empId").value.trim(), type, date: t.date, time: t.time, timeZone: CONFIG.timeZone,
         lat: lat.toFixed(6), lng: lng.toFixed(6), distance: dist, accuracy: Math.round(accuracy) });
-      save(recs);
-      setStatus(`✅ ${type === "IN" ? "Checked in" : "Checked out"} at ${t.time} (Phnom Penh time), ${dist} m from office. ${acc}`, "ok");
-      render();
+      const rec = recs[recs.length - 1];
+      const okMsg = `${type === "IN" ? "Checked in" : "Checked out"} at ${t.time} (Phnom Penh time), ${dist} m from office. ${acc}`;
+      rec.synced = false; save(recs); render();
+      setStatus("Saving to company log…");
+      const row = { employee_name: name, employee_id: rec.empId || null, type, lat, lng,
+        distance_m: dist, accuracy_m: Math.round(accuracy), device_time: `${t.date} ${t.time} ${CONFIG.timeZone}` };
+      (window.saveCheckin ? window.saveCheckin(row) : Promise.reject(new Error("online service not loaded")))
+        .then(() => { rec.synced = true; save(recs); render(); setStatus("✅ " + okMsg, "ok"); })
+        .catch(e => setStatus(`⚠️ ${okMsg} BUT it was NOT sent to the company log (${e.message || e}). A copy is kept on this phone — please tell your manager or try again.`, "err"));
     }, err => {
       $("btnIn").disabled = $("btnOut").disabled = false;
       setStatus("Could not get location: " + err.message + ". Please allow location access and try again.", "err");
