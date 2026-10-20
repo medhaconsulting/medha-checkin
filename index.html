@@ -2,32 +2,57 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2f9aad">
 <title>Medha Consulting – Check-In/Out</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<header>
-  <h1>Medha Consulting (Cambodia) Co., Ltd.</h1>
-  <p class="sub">Employee Check-In / Check-Out</p>
+<body class="page-checkin">
+<header class="top">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">MC</div>
+    <div class="brand-text">
+      <h1>Medha Consulting</h1>
+      <p class="sub">(Cambodia) Co., Ltd.</p>
+    </div>
+  </div>
+  <p class="title">Employee Check-In / Check-Out</p>
   <p class="loc" id="locName"></p>
 </header>
 <main>
-  <section class="card">
+  <div id="pill" class="pill wait" role="status" aria-live="polite"><span class="dot"></span><span id="pillText">Checking location…</span></div>
+
+  <section class="card form">
     <label>Your name <input id="name" placeholder="e.g. Sokha Chan" autocomplete="name"></label>
-    <label>Employee ID (optional) <input id="empId" placeholder="e.g. MC-001"></label>
+    <label>Employee ID <span class="opt">(optional)</span> <input id="empId" placeholder="e.g. MC-001"></label>
   </section>
+
   <section class="buttons">
-    <button id="btnIn" class="btn in">Check In</button>
-    <button id="btnOut" class="btn out">Check Out</button>
+    <button id="btnIn" class="btn in" disabled><span class="ico" aria-hidden="true">→</span>Check In</button>
+    <button id="btnOut" class="btn out" disabled><span class="ico" aria-hidden="true">←</span>Check Out</button>
   </section>
-  <div id="status" class="status">Ready.</div>
+
+  <section id="success" class="success" hidden role="alert">
+    <div class="tick" aria-hidden="true">✓</div>
+    <div>
+      <p class="s-title" id="sTitle">Checked in</p>
+      <p class="s-time" id="sTime">08:02</p>
+      <p class="s-meta" id="sMeta"></p>
+    </div>
+    <button id="sClose" class="s-close" aria-label="Dismiss">×</button>
+  </section>
+
+  <div id="status" class="status" aria-live="polite">Ready.</div>
+
   <section class="card">
-    <div class="row"><h2>Today's history</h2><button id="btnCsv" class="small">Download CSV</button></div>
-    <ul id="history"></ul>
+    <div class="row"><h2>Today's history</h2><button id="btnCsv" class="small ghost">Download CSV</button></div>
+    <ul id="history" class="history"></ul>
   </section>
   <p class="note">Check-ins are sent to the company log. A backup copy is also kept on this phone.</p>
-  <footer><a href="admin.html">Admin</a></footer>
+  <footer><span>© Medha Consulting (Cambodia) Co., Ltd.</span><a href="admin.html">Admin</a></footer>
 </main>
 <script src="config.js"></script>
 <script type="module" src="db.js"></script>

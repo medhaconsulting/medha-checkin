@@ -18,11 +18,14 @@ function render() {
   list.forEach(r => {
     const t = pp(r.created_at), tr = document.createElement("tr");
     [t.date, t.time, r.employee_name, r.employee_id || "", r.type, Math.round(r.distance_m ?? 0), Math.round(r.accuracy_m ?? 0)]
-      .forEach(v => { const td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
+      .forEach((v, i) => { const td = document.createElement("td"); if (i === 4) { const b = document.createElement("span"); b.className = "badge " + v; b.textContent = v; td.appendChild(b); } else td.textContent = v; if (i >= 5) td.className = "num"; tr.appendChild(td); });
     const td = document.createElement("td");
     if (r.lat != null) { const a = document.createElement("a"); a.href = `https://www.google.com/maps?q=${r.lat},${r.lng}`; a.target = "_blank"; a.textContent = "map"; td.appendChild(a); }
     tr.appendChild(td); tb.appendChild(tr);
   });
+  $("sIn").textContent = list.filter(r => r.type === "IN").length;
+  $("sOut").textContent = list.filter(r => r.type === "OUT").length;
+  $("sEmp").textContent = new Set(list.map(r => (r.employee_id || r.employee_name || "").trim().toLowerCase())).size;
   $("count").textContent = `${list.length} record(s)${$("date").value ? " on " + $("date").value : " (all dates)"}. Newest first.`;
 }
 
