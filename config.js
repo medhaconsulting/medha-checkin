@@ -3,5 +3,5 @@
 window.SUPABASE_CONFIG = {
   url: "https://eeskricyucilmykhtwju.supabase.co",
   publishableKey: "sb_publishable_Ky2-4quQngh8n75oKDUuug_Rbz3F1MT",
-  adminRedirectUrl: "https://medhaconsulting.github.io/medha-checkin/admin.html",
+  adminRedirectUrl: "https://medha-checkin.netlify.app/admin.html",
 };
