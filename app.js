@@ -6,6 +6,7 @@ const CONFIG = {
   officeLng: 104.8682496,
   radiusMeters: 500,
   timeZone: "Asia/Phnom_Penh",
+  workStart: "08:00", // official start; check-in after this shows "Late"
 };
 // ================================================================
 
@@ -140,6 +141,9 @@ if (typeof document !== "undefined") {
     $("sBye").textContent = (type === "IN" ? "Have a good day" : "See you next time") + (first ? `, ${first}.` : ".");
     $("sTime").textContent = t.time.slice(0, 5) + " · " + new Date().toLocaleDateString("en-GB", { ...tz, weekday: "short", day: "numeric", month: "short" });
     $("sPlace").textContent = `${fmtDist(dist)} from office`;
+    const late = t.time.slice(0, 5) > CONFIG.workStart;
+    $("sStatusRow").hidden = type !== "IN";
+    $("sStatus").textContent = late ? "Late" : "On time"; $("sStatus").className = "badge " + (late ? "warn" : "ok");
     $("sTg").hidden = !document.body.classList.contains("in-telegram");
     $("success").hidden = false;
   }

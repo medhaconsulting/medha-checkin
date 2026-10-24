@@ -4,7 +4,7 @@ const sb = createClient(c.url, c.publishableKey);
 const $ = id => document.getElementById(id);
 const $$ = s => [...document.querySelectorAll(s)];
 const TZ = "Asia/Phnom_Penh";
-const START = "08:30"; // "on time" cut-off shown on the Today page (same as the reminder time)
+const START = "08:00"; // official work start (Phnom Penh): on time = check-in at or before this
 const adminUrl = location.origin + location.pathname;
 const setStatus = (m, cls = "") => { const s = $("status"); s.textContent = m; s.className = "alert " + cls; s.hidden = !m; };
 const setAuth = (m, cls = "") => { const s = $("authStatus"); s.textContent = m; s.className = "alert " + cls; s.hidden = !m; };
