@@ -34,3 +34,9 @@ Only `ot.chandy@gmail.com` can see records. Anyone else who signs in sees an emp
 
 ## Hosting
 The site is published by GitHub Pages from the `main` branch. Pushing changes to `main` updates the site in about a minute.
+
+## Telegram Mini App pilot (branch telegram-miniapp)
+- `tg.js` – only active inside Telegram; verifies the user via Edge Function `tg-checkin`.
+- `supabase/functions/tg-checkin` – verifies initData (HMAC with bot token), links/pending users, server-side 500 m check, personal confirmation.
+- `supabase/migrations/2026102400000{1,2}_*.sql` – `tg_staff`, `tg_settings` (reminder OFF by default), admin link-request ping, 8:30 AM Mon–Sat pg_cron reminder.
+- Test: `node test.js && node test_tg.mjs`.
