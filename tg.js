@@ -1,10 +1,9 @@
 // Telegram Mini App mode. Does nothing when opened in a normal browser.
 const tg = window.Telegram?.WebApp;
-const $ = id => document.getElementById(id);
 if (tg && tg.initData) {
   tg.ready(); tg.expand();
   document.body.classList.add("in-telegram");
-  const c = window.SUPABASE_CONFIG;
+  const c = window.SUPABASE_CONFIG, MC = window.MC;
   const call = async payload => {
     const r = await fetch(c.tgFunctionUrl, { method: "POST", headers: { "Content-Type": "application/json", apikey: c.publishableKey },
       body: JSON.stringify({ initData: tg.initData, ...payload }) });
@@ -12,19 +11,15 @@ if (tg && tg.initData) {
     if (!r.ok) throw new Error(j.error || "HTTP " + r.status);
     return j;
   };
-  const lock = on => { $("btnIn").hidden = $("btnOut").hidden = !on; };
-  const banner = (msg, cls) => { const b = $("tgBanner"); b.textContent = msg; b.className = "status " + cls; b.hidden = false; };
-  call({ action: "me" }).then(me => {
-    if (me.status !== "approved") {
-      lock(false);
-      banner(me.status === "rejected" ? "Your Telegram account was not approved. Please contact your admin."
-        : "👋 Thanks! Your Telegram account is waiting for admin approval. You can check in once approved.", "err");
-      return;
-    }
-    $("name").value = me.name; $("name").readOnly = true;
-    $("empId").value = me.employee_id || ""; $("empId").readOnly = true;
-    banner("Signed in with Telegram as " + me.name + (me.radius && me.radius !== 500 ? ` · TEST radius ${me.radius} m` : ""), "ok");
-    if (me.radius && typeof CONFIG !== "undefined") { CONFIG.radiusMeters = me.radius; $("locName").textContent = "📍 " + CONFIG.locationName + ` · within ${me.radius} m`; }
+  const check = () => call({ action: "me" }).then(me => {
+    if (me.status !== "approved") { MC.lock(true); MC.showWaiting(me.name, me.status); return; }
+    document.getElementById("waitScreen").hidden = true;
+    MC.setUser(me.name, me.employee_id); MC.lock(false);
+    MC.banner(me.radius && me.radius !== 500 ? `TEST radius ${me.radius} m` : "", "warn");
+    if (me.radius) MC.setRadius(me.radius);
     window.saveCheckin = row => call({ action: "checkin", type: row.type, lat: row.lat, lng: row.lng, accuracy: row.accuracy_m, device_time: row.device_time });
-  }).catch(e => { lock(false); banner("Could not verify your Telegram account: " + e.message, "err"); });
+  }).catch(e => { MC.lock(true); MC.banner("Could not verify your Telegram account: " + e.message, "err"); });
+  MC.lock(true);
+  document.getElementById("btnCheckAgain").onclick = check;
+  check();
 }

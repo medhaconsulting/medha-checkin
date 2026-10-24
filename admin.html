@@ -3,66 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2f9aad">
-<title>Medha Consulting – Check-In Admin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#FAF8F5">
+<title>Medha Check In – Admin</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="page-admin">
-<header class="top">
-  <div class="brand">
-    <div class="logo" aria-hidden="true">MC</div>
-    <div class="brand-text">
-      <h1>Medha Consulting</h1>
-      <p class="sub">(Cambodia) Co., Ltd.</p>
-    </div>
-  </div>
-  <p class="title">Check-In Admin</p>
-</header>
-<main class="wide">
-  <section id="loginBox" class="card login" hidden>
-    <div class="lock" aria-hidden="true">🔒</div>
-    <h2>Admin sign-in</h2>
-    <label>Admin email <input id="email" type="email" placeholder="you@example.com" autocomplete="username"></label>
-    <label>Password <input id="password" type="password" autocomplete="current-password"></label>
-    <button id="btnLogin" class="primary">Sign in</button>
-    <p><button id="btnForgot" class="small ghost" type="button">Forgot password?</button></p>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-in" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M8 16H3v5"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+</svg>
+
+<!-- Sign in / reset / set password -->
+<main class="auth" id="authBox" hidden>
+  <p class="wordmark">Medha <em>Check In</em></p><p class="muted small">Admin</p>
+  <section class="card" id="loginBox">
+    <h2 style="font-size:22px">Sign in</h2>
+    <div class="alert err" id="loginErr" hidden><svg class="i"><use href="#i-x"/></svg><div><b>Email or password is wrong</b>Check them and try again.</div></div>
+    <label class="f">Email <input id="email" type="email" autocomplete="username"></label>
+    <label class="f">Password <input id="password" type="password" autocomplete="current-password"></label>
+    <button id="btnForgot" class="link small" type="button" style="align-self:flex-start">Forgot password?</button>
+    <button id="btnLogin" class="btn">Sign in</button>
   </section>
-  <section id="resetBox" class="card login" hidden>
-    <div class="lock" aria-hidden="true">🔑</div>
-    <h2>Set a new password</h2>
-    <label>New password <input id="newPw" type="password" autocomplete="new-password" minlength="8"></label>
-    <label>Repeat new password <input id="newPw2" type="password" autocomplete="new-password"></label>
-    <button id="btnSetPw" class="primary">Save new password</button>
+  <section class="card" id="forgotBox" hidden>
+    <h2 style="font-size:22px">Reset your password</h2>
+    <p class="muted small">Enter your admin email. We will send you a link to set a new password.</p>
+    <label class="f">Email <input id="fEmail" type="email" autocomplete="username"></label>
+    <button id="btnSendReset" class="btn" style="align-self:flex-start">Send reset link</button>
+    <div class="alert ok" id="fSent" hidden><svg class="i"><use href="#i-check"/></svg><div><b>Check your email</b><span id="fSentText"></span></div></div>
+    <button id="btnBack" class="link small" type="button">Back to sign in</button>
   </section>
-  <section id="dataBox" hidden>
-    <div class="card bar">
-      <div class="row"><span id="who" class="muted"></span><button id="btnOut" class="small ghost">Sign out</button></div>
-    </div>
-    <div class="stats">
-      <div class="stat"><span class="n" id="sIn">0</span><span class="l">Check-ins</span></div>
-      <div class="stat"><span class="n" id="sOut">0</span><span class="l">Check-outs</span></div>
-      <div class="stat"><span class="n" id="sEmp">0</span><span class="l">Employees</span></div>
-    </div>
-    <div class="card">
-      <div class="row filters">
-        <label style="margin:0">Date (Phnom Penh) <input id="date" type="date"></label>
-        <div class="actions"><button id="btnAll" class="small ghost">Show all</button><button id="btnCsv" class="small">Download CSV</button></div>
-      </div>
-      <p id="count" class="muted"></p>
-      <div class="tbl"><table><thead><tr><th>Date</th><th>Time</th><th>Name</th><th>ID</th><th>Type</th><th>Distance (m)</th><th>Accuracy (m)</th><th>Map</th></tr></thead><tbody id="rows"></tbody></table></div>
-    </div>
-    <div class="card">
-      <div class="row"><h2>Telegram staff</h2><label style="margin:0"><input id="remToggle" type="checkbox"> 8:30 AM reminder (Mon–Sat)</label></div>
-      <p class="muted">People who opened the app in Telegram. Approve once; set their name / employee ID as it should appear in the log.</p>
-      <div class="tbl"><table><thead><tr><th>Telegram</th><th>Name</th><th>Employee ID</th><th>Status</th><th></th></tr></thead><tbody id="tgRows"></tbody></table></div>
-    </div>
+  <section class="card" id="resetBox" hidden>
+    <h2 style="font-size:22px">Set a new password</h2>
+    <label class="f">New password <input id="newPw" type="password" autocomplete="new-password"></label>
+    <ul class="checks"><li id="ck8">At least 8 characters</li><li id="ckNum">Has a number</li></ul>
+    <label class="f">Type it again <input id="newPw2" type="password" autocomplete="new-password"></label>
+    <p class="small" style="color:var(--err)" id="pwMismatch" hidden>The two passwords are not the same.</p>
+    <button id="btnSetPw" class="btn" style="align-self:flex-start">Save new password</button>
   </section>
-  <div id="status" class="status">Loading…</div>
-  <footer><a href="./">← Back to check-in</a></footer>
+  <div id="authStatus" class="alert" hidden style="margin-top:14px"></div>
 </main>
+
+<!-- Dashboard -->
+<div class="shell" id="dataBox" hidden>
+  <aside class="side">
+    <p class="wordmark">Medha <em>Check In</em></p>
+    <button class="nav on" data-view="today"><svg class="i"><use href="#i-sun"/></svg>Today</button>
+    <button class="nav" data-view="log"><svg class="i"><use href="#i-list"/></svg>Attendance log</button>
+    <button class="nav" data-view="staff"><svg class="i"><use href="#i-users"/></svg>Telegram staff<span class="count" data-pending hidden></span></button>
+    <button class="nav" data-view="reminder"><svg class="i"><use href="#i-bell"/></svg>Reminder</button>
+    <div class="who"><span id="who"></span><button class="btn ghost sm" data-signout>Sign out</button></div>
+  </aside>
+  <main class="content">
+    <div class="mobile-who"><span id="who2"></span><button class="link small" data-signout>Sign out</button></div>
+    <div id="status" class="alert" hidden style="margin-bottom:16px"></div>
+
+    <section class="sec" data-sec="today">
+      <div class="pagehead"><div><p class="small muted" id="todayLabel"></p><h1>Today</h1></div><button class="btn ghost sm" id="btnCsvToday">Export CSV</button></div>
+      <div class="kpis">
+        <div class="card kpi in"><h3><span>● In office</span><small>by <span class="startT"></span></small></h3><p class="n" id="kIn">0</p><ul class="plist" id="lIn"></ul></div>
+        <div class="card kpi late"><h3><span>◷ Late</span><small>after <span class="startT"></span></small></h3><p class="n" id="kLate">0</p><ul class="plist" id="lLate"></ul></div>
+        <div class="card kpi miss"><h3><span>! Not in yet</span><small>Telegram staff</small></h3><p class="n" id="kMiss">0</p><ul class="plist" id="lMiss"></ul></div>
+      </div>
+      <div class="alert warn" id="pendingNote" hidden><svg class="i"><use href="#i-users"/></svg><div><b id="pendingText"></b><button class="link small" data-goto="staff">Review</button></div></div>
+    </section>
+
+    <section class="sec" data-sec="log">
+      <div class="pagehead"><h2>Attendance log</h2><span class="small muted" id="count"></span></div>
+      <div class="filters">
+        <label class="f">Date (Phnom Penh) <input id="date" type="date"></label>
+        <label class="f">Person <select id="person"><option value="">All staff</option></select></label>
+        <div><span class="small" style="font-weight:500">Type</span><br><span class="seg" id="typeSeg"><button data-t="" class="on">All</button><button data-t="IN">Check in</button><button data-t="OUT">Check out</button></span></div>
+        <span style="flex:1"></span>
+        <button id="btnAll" class="btn ghost sm">All dates</button><button id="btnCsv" class="btn ghost sm">Export CSV</button>
+      </div>
+      <div class="alert err" id="logErr" hidden><svg class="i"><use href="#i-x"/></svg><div><b>We could not load the log</b><span id="logErrText"></span> <button class="link small" id="btnRetry">Try again</button></div></div>
+      <div class="tbl"><table><thead><tr><th>Date</th><th>Time</th><th>Name</th><th>ID</th><th>Type</th><th>Distance</th><th>Accuracy</th><th>From</th><th>Map</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </section>
+
+    <section class="sec" data-sec="staff">
+      <div class="pagehead"><div><h2>Telegram staff</h2><p class="small muted" id="staffSummary"></p></div></div>
+      <p class="small muted">People who opened Check In inside Telegram. Approve once, and set the name and employee ID that should appear in the log.</p>
+      <p class="sub-h">Waiting for approval</p><div class="wait-list" id="waitList"></div>
+      <p class="sub-h">Approved</p>
+      <div class="tbl" style="margin-top:8px"><table><thead><tr><th>Name</th><th>Employee ID</th><th>Telegram</th><th>Status</th><th></th></tr></thead><tbody id="tgRows"></tbody></table></div>
+    </section>
+
+    <section class="sec" data-sec="reminder">
+      <h2>Reminder</h2>
+      <div class="card" style="margin-top:14px;max-width:640px">
+        <div class="toggle"><div><b>Daily reminder at 8:30 AM</b><p class="small muted">Sends a Telegram message to approved staff who have not checked in. Monday to Saturday.</p></div>
+          <label class="switch"><input id="remToggle" type="checkbox" aria-label="Daily reminder"><span></span></label></div>
+        <p class="small" id="remState" style="margin-top:10px"></p>
+        <div class="preview"><p class="sub-h" style="margin:0 0 4px">Message preview</p>⏰ Good morning [name], you haven't checked in yet today. Tap the menu button to check in.</div>
+      </div>
+    </section>
+  </main>
+  <nav class="tabs"><button class="nav on" data-view="today"><svg class="i"><use href="#i-sun"/></svg>Today</button>
+    <button class="nav" data-view="log"><svg class="i"><use href="#i-list"/></svg>Log</button>
+    <button class="nav" data-view="staff"><svg class="i"><use href="#i-users"/></svg>Staff<span class="count" data-pending hidden></span></button>
+    <button class="nav" data-view="reminder"><svg class="i"><use href="#i-bell"/></svg>Reminder</button></nav>
+</div>
 <script src="config.js"></script>
 <script type="module" src="admin.js"></script>
 </body>
