@@ -23,6 +23,7 @@
   <p class="loc" id="locName"></p>
 </header>
 <main>
+  <div id="tgBanner" class="status" hidden></div>
   <div id="pill" class="pill wait" role="status" aria-live="polite"><span class="dot"></span><span id="pillText">Checking location…</span></div>
 
   <section class="card form">
@@ -54,8 +55,10 @@
   <p class="note">Check-ins are sent to the company log. A backup copy is also kept on this phone.</p>
   <footer><span>© Medha Consulting (Cambodia) Co., Ltd.</span><a href="admin.html">Admin</a></footer>
 </main>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="config.js"></script>
 <script type="module" src="db.js"></script>
 <script src="app.js"></script>
+<script type="module" src="tg.js"></script>
 </body>
 </html>

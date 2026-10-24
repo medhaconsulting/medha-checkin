@@ -5,3 +5,4 @@ window.SUPABASE_CONFIG = {
   publishableKey: "sb_publishable_Ky2-4quQngh8n75oKDUuug_Rbz3F1MT",
   adminRedirectUrl: "https://medha-checkin.netlify.app/admin.html",
 };
+window.SUPABASE_CONFIG.tgFunctionUrl = "https://eeskricyucilmykhtwju.supabase.co/functions/v1/tg-checkin";
