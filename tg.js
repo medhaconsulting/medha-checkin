@@ -23,7 +23,8 @@ if (tg && tg.initData) {
     }
     $("name").value = me.name; $("name").readOnly = true;
     $("empId").value = me.employee_id || ""; $("empId").readOnly = true;
-    banner("Signed in with Telegram as " + me.name, "ok");
+    banner("Signed in with Telegram as " + me.name + (me.radius && me.radius !== 500 ? ` · TEST radius ${me.radius} m` : ""), "ok");
+    if (me.radius && typeof CONFIG !== "undefined") { CONFIG.radiusMeters = me.radius; $("locName").textContent = "📍 " + CONFIG.locationName + ` · within ${me.radius} m`; }
     window.saveCheckin = row => call({ action: "checkin", type: row.type, lat: row.lat, lng: row.lng, accuracy: row.accuracy_m, device_time: row.device_time });
   }).catch(e => { lock(false); banner("Could not verify your Telegram account: " + e.message, "err"); });
 }

@@ -41,7 +41,11 @@ Deno.serve(async req => {
     staff = ins.data;
   }
 
-  if (body.action === "me") return json({ status: staff.status, name: staff.display_name, employee_id: staff.employee_id });
+  // Radius: 500 m, unless a temporary test radius is set for this Telegram user in tg_settings.
+  const { data: set } = await db.from("tg_settings").select("test_radius_m, test_user_id").eq("id", 1).maybeSingle();
+  const radius = set?.test_radius_m && Number(set.test_user_id) === u.id ? set.test_radius_m : SITE.radius;
+
+  if (body.action === "me") return json({ status: staff.status, name: staff.display_name, employee_id: staff.employee_id, radius });
 
   if (body.action === "checkin") {
     if (staff.status !== "approved") return json({ error: "Your Telegram account is waiting for admin approval." }, 403);
@@ -49,7 +53,7 @@ Deno.serve(async req => {
     const lat = Number(body.lat), lng = Number(body.lng), acc = Number(body.accuracy) || null;
     if (!type || !isFinite(lat) || !isFinite(lng)) return json({ error: "bad input" }, 400);
     const d = Math.round(dist(lat, lng));
-    if (d > SITE.radius) return json({ error: `Not recorded. You are ${d} m from the office (must be within ${SITE.radius} m).`, distance: d }, 422);
+    if (d > radius) return json({ error: `Not recorded. You are ${d} m from the office (must be within ${radius} m).`, distance: d }, 422);
     const now = new Date();
     const ins = await db.from("checkins").insert({ employee_name: staff.display_name, employee_id: staff.employee_id, type, lat, lng,
       distance_m: d, accuracy_m: acc ? Math.round(acc) : null, device_time: String(body.device_time ?? "").slice(0, 100) || null,
