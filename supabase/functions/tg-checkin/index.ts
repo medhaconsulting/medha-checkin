@@ -1,13 +1,15 @@
 // Edge Function: Telegram Mini App backend for Medha Check In.
-// Secrets (set with `supabase secrets set`, never in git): TELEGRAM_BOT_TOKEN.
+// Bot token comes from Vault (tg_bot_token RPC) or optional secret TELEGRAM_BOT_TOKEN.
 // SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY are provided automatically.
 // Deploy with --no-verify-jwt (auth is the Telegram initData signature).
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { verifyInitData } from "../_shared/initdata.js";
+import { verifyInitData } from "./initdata.js";
 
 const SITE = { lat: 11.5262264, lng: 104.8682496, radius: 500 };
-const TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? "";
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+// Bot token: env secret if set, else Vault via service-role-only RPC tg_bot_token().
+let TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? "";
+async function token() { if (!TOKEN) { const { data } = await db.rpc("tg_bot_token"); TOKEN = data ?? ""; } return TOKEN; }
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "content-type, authorization, apikey, x-client-info", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 
@@ -26,7 +28,7 @@ Deno.serve(async req => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "POST only" }, 405);
   let body: any; try { body = await req.json(); } catch { return json({ error: "bad json" }, 400); }
-  const v = await verifyInitData(body.initData, TOKEN);
+  const v = await verifyInitData(body.initData, await token());
   if (!v.ok) return json({ error: "Telegram sign-in check failed (" + v.reason + ")" }, 401);
   const u = v.user;
 

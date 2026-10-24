@@ -1,5 +1,5 @@
 import assert from "assert";
-import { verifyInitData, signInitData } from "./supabase/functions/_shared/initdata.js";
+import { verifyInitData, signInitData } from "./supabase/functions/tg-checkin/initdata.js";
 const TOKEN = "123456:FAKE-test-token", now = 1761300000;
 const user = JSON.stringify({ id: 42, first_name: "Test", username: "tester" });
 const good = await signInitData({ query_id: "AAH", user, auth_date: String(now) }, TOKEN);
