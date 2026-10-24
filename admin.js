@@ -52,17 +52,41 @@ async function show(session) {
     $("who").textContent = "Signed in as " + session.user.email;
     await loadData();
   } else {
-    $("loginBox").hidden = false; $("dataBox").hidden = true; setStatus("");
+    $("loginBox").hidden = false; $("dataBox").hidden = true; $("resetBox").hidden = true; setStatus("");
   }
 }
 
-$("btnLogin").onclick = async () => {
-  const email = $("email").value.trim();
-  if (!email) { setStatus("Please enter your email.", "err"); return; }
+const adminUrl = location.origin + location.pathname; // current admin page (preview or production)
+let recovering = false;
+const doLogin = async () => {
+  const email = $("email").value.trim(), password = $("password").value;
+  if (!email || !password) { setStatus("Please enter your email and password.", "err"); return; }
   $("btnLogin").disabled = true;
-  const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: c.adminRedirectUrl, shouldCreateUser: true } });
+  const { error } = await sb.auth.signInWithPassword({ email, password });
   $("btnLogin").disabled = false;
-  setStatus(error ? "Could not send link: " + error.message : "📧 Check your email and tap the sign-in link.", error ? "err" : "ok");
+  if (error) setStatus("Could not sign in: " + error.message, "err");
+};
+$("btnLogin").onclick = doLogin;
+$("password").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+$("btnForgot").onclick = async () => {
+  const email = $("email").value.trim();
+  if (!email) { setStatus("Type your email first, then tap Forgot password.", "err"); $("email").focus(); return; }
+  $("btnForgot").disabled = true;
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: adminUrl });
+  $("btnForgot").disabled = false;
+  setStatus(error ? "Could not send reset email: " + error.message : "📧 Check your email for a link to set a new password.", error ? "err" : "ok");
+};
+function showReset() { recovering = true; $("loginBox").hidden = true; $("dataBox").hidden = true; $("resetBox").hidden = false; setStatus("Choose a new password (at least 8 characters)."); }
+$("btnSetPw").onclick = async () => {
+  const a = $("newPw").value, b = $("newPw2").value;
+  if (a.length < 8) { setStatus("Password must be at least 8 characters.", "err"); return; }
+  if (a !== b) { setStatus("The two passwords don't match.", "err"); return; }
+  $("btnSetPw").disabled = true;
+  const { data, error } = await sb.auth.updateUser({ password: a });
+  $("btnSetPw").disabled = false;
+  if (error) { setStatus("Could not save password: " + error.message, "err"); return; }
+  recovering = false; $("resetBox").hidden = true; history.replaceState(null, "", adminUrl);
+  setStatus("✅ Password saved.", "ok"); current = data.user?.id ?? null; show((await sb.auth.getSession()).data.session);
 };
 $("btnOut").onclick = async () => { await sb.auth.signOut(); rows = []; show(null); };
 $("date").value = pp(new Date()).date;
@@ -71,6 +95,10 @@ $("btnAll").onclick = () => { $("date").value = ""; render(); };
 $("btnCsv").onclick = csv;
 
 let current = null;
-sb.auth.onAuthStateChange((_e, s) => { if ((s?.user?.id) !== current) { current = s?.user?.id ?? null; show(s); } });
+sb.auth.onAuthStateChange((e, s) => {
+  if (e === "PASSWORD_RECOVERY") { current = s?.user?.id ?? null; showReset(); return; }
+  if (recovering) return;
+  if ((s?.user?.id) !== current) { current = s?.user?.id ?? null; show(s); }
+});
 const { data: { session } } = await sb.auth.getSession();
 if (!session) show(null);

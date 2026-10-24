@@ -25,9 +25,17 @@
   <section id="loginBox" class="card login" hidden>
     <div class="lock" aria-hidden="true">🔒</div>
     <h2>Admin sign-in</h2>
-    <p class="muted">We'll email you a secure one-time sign-in link. No password needed.</p>
-    <label>Admin email <input id="email" type="email" placeholder="you@example.com" autocomplete="email"></label>
-    <button id="btnLogin" class="primary">Send me a sign-in link</button>
+    <label>Admin email <input id="email" type="email" placeholder="you@example.com" autocomplete="username"></label>
+    <label>Password <input id="password" type="password" autocomplete="current-password"></label>
+    <button id="btnLogin" class="primary">Sign in</button>
+    <p><button id="btnForgot" class="small ghost" type="button">Forgot password?</button></p>
+  </section>
+  <section id="resetBox" class="card login" hidden>
+    <div class="lock" aria-hidden="true">🔑</div>
+    <h2>Set a new password</h2>
+    <label>New password <input id="newPw" type="password" autocomplete="new-password" minlength="8"></label>
+    <label>Repeat new password <input id="newPw2" type="password" autocomplete="new-password"></label>
+    <button id="btnSetPw" class="primary">Save new password</button>
   </section>
   <section id="dataBox" hidden>
     <div class="card bar">
